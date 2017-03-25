@@ -38,12 +38,14 @@ build.gradle:
     }
 
     allprojects {
+        apply plugin: 'application'
+        mainClassName = 'Main'
         repositories {
             jcenter()
             mavenLocal()
         }
 
-    // Define versions in a single place
+    // Define versions in a single place, as necessary.
     ext {
         // App dependencies
     }
@@ -55,24 +57,12 @@ settings.gradle contains the sub-projects:
 With this structure in place a new example (project) can be added very simply.  For example, _ex1_ would add the following to the *java-examples* folder:
 
     ~/java-examples/
-      ex1/
-        build.gradle
-        src/
-          main/
-            java/
-              Ex1.java
+      ex1/src/main/java/Main.java
 
-build.gradle:
-
-    // Project build script ... cannot be any simpler:
-    apply plugin: 'application'
-    mainClassName = "Ex1"
-
-
-Ex1.java:
+Main.java:
 
     /** A most basic class. */
-    public class Ex1 {
+    public class Main {
         public static void main(String[] args) {
             System.out.println("Hello World");
         }

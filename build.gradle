@@ -11,6 +11,8 @@ buildscript {
 }
 
 allprojects {
+    apply plugin: 'application'
+    mainClassName = 'Main'
     repositories {
         jcenter()
         mavenLocal()
