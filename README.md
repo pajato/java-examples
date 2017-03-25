@@ -52,7 +52,7 @@ settings.gradle contains the sub-projects:
 
     include ':ex1', ':ex2', ...
 
-With this structure in place a new example (project) can be added very simply.  For example, _ex1_ would add the following to *java-examples* folder:
+With this structure in place a new example (project) can be added very simply.  For example, _ex1_ would add the following to the *java-examples* folder:
 
     ~/java-examples/
       ex1/
@@ -78,7 +78,7 @@ Ex1.java:
         }
     }
 
-And now, to build and run using the Emacs M-x compile facility is:
+And now, to build and run using the Emacs M-x compile facility:
 
     M-x compile
     cd ~/java-examples && gradlew :ex1:run
