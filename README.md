@@ -1,3 +1,5 @@
+# Overview
+
 I was recently asked to hack some sample programs for an interview using Java.  Very simple programs that can use the default package, require only a single file and, preferably, can be compiled and run from the command line.
 
 My first attempt was to use the command line (bash).  It is OK, but going back and forth between the editor and bash is a nuisance. Next up was to use the M-x compile facility in Emacs.  Better but still clunky.  In this story, the only computer resident IDE is Android Studio which, while excellent for Android development, is clunky with a simple Java program.  Maintaining a long lived IDE apart from Android Studio for this purpose is overkill and undesirable.
@@ -22,6 +24,7 @@ Next up is a top level *build.gradle* file and a *settings.gradle* file:
 
 
 build.gradle:
+
     // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
     buildscript {
@@ -46,7 +49,8 @@ build.gradle:
     }
 
 settings.gradle contains the sub-projects:
-    include 'ex1', 'ex2', ...
+
+    include ':ex1', ':ex2', ...
 
 With this structure in place a new example (project) can be added very simply.  For example, _ex1_ would add the following to *java-examples* folder:
 
@@ -59,12 +63,14 @@ With this structure in place a new example (project) can be added very simply.  
               Ex1.java
 
 build.gradle:
+
     // Project build script ... cannot be any simpler:
     apply plugin: 'application'
     mainClassName = "Ex1"
 
 
 Ex1.java:
+
     /** A most basic class. */
     public class Ex1 {
         public static void main(String[] args) {
