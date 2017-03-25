@@ -84,3 +84,23 @@ And now, to build and run using the Emacs M-x compile facility is:
     cd ~/java-examples && gradlew :ex1:run
 
 which will generate the output:
+
+    -*- mode: compilation; default-directory: "~/java-examples/" -*-
+    Compilation started at Sat Mar 25 04:03:35
+
+    cd ~/java-examples && gradle ex1:run
+    Starting a new Gradle Daemon for this build (subsequent builds will be faster).
+    Parallel execution with configuration on demand is an incubating feature.
+    :ex1:compileJava UP-TO-DATE
+    :ex1:processResources UP-TO-DATE
+    :ex1:classes UP-TO-DATE
+    :ex1:run
+    Hello World
+
+    BUILD SUCCESSFUL
+
+    Total time: 2.882 secs
+
+    Compilation finished at Sat Mar 25 04:03:39
+
+And away you go...
