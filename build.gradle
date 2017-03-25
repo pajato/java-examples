@@ -13,6 +13,11 @@ buildscript {
 allprojects {
     apply plugin: 'application'
     mainClassName = 'Main'
+    run {
+        if ( project.hasProperty('args') ) {
+            args project.args.split('\\s+')
+        }
+    }
     repositories {
         jcenter()
         mavenLocal()
