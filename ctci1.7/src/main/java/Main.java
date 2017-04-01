@@ -41,6 +41,7 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import util.Util;
 
 public class Main {
 
@@ -61,44 +62,23 @@ public class Main {
         }
     }
 
-    /** Return a copy of the given matrix. */
-    private static int[][] copyOf(final int[][] m) {
-        int size = m.length;
-        int[][] result = new int[size][size];
-        for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
-                result[i][j] = m[i][j];
-        return result;
-    }
+    /**
+     * Do nothing if the given value is not a positive non-zero value, otherwise zero out the rows
+     * and columns for each element containing a zero value.
+     */
+    private static void zeroMatrix(final String value) {
+        // Run BFS to determine the result.
+        final int N = Util.getInt(value);
+        if (N < 0)
+            return;
 
-    /** Return the given row expressed as a string. */
-    private static String getRow(int[][] m, int r) {
-        int[] row = m[r];
-        StringBuilder result = new StringBuilder();
-        result.append("[");
-        for (int c = 0; c < m.length; c++) {
-            int value = row[c];
-            result.append(value);
-            if (c < m.length - 1)
-                result.append(" ");
-        }
-        result.append("]");
-        return result.toString();
-    }
-
-    /** Return a random value in the given (inclusive) range. */
-    private static int getRandomInRange(int min, int max) {
-        int range = (max - min) + 1;
-        return (int)(Math.random() * range) + min;
-    }
-
-    /** Return -1 or a positive non-zero integer given by the argument. */
-    private static int getSize(final String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException exc) {
-            return -1;
-        }
+        // Populate the NxN matrix with randomly generated and placed 0's.  Keep a copy of the
+        // original input order to print both for a side by side comparison.
+        int[][] input = populateMatrix(N);
+        int[][] result = Util.copyOf(input);
+        zeroMatrix(result);
+        System.out.println(String.format("Matrix of size %s.", value));
+        Util.printMatrices(input, result);
     }
 
     /** Return a list of rows that need to be zeroed. */
@@ -132,22 +112,6 @@ public class Main {
         return result;
     }
 
-    /** Print the given matrices side by side. */
-    private static void printMatrices(final int[][] m1, final int[][] m2) {
-        final int N = m1.length;
-        if (m2.length != N) {
-            System.out.println("Error: m1 and m2 are not of the same size.");
-            System.exit(1);
-        }
-        for (int n = 0; n < N; n++) {
-            String inputRow = getRow(m1, n);
-            String outputRow = getRow(m2, n);
-            String line = String.format(Locale.US, "%s    %s", inputRow, outputRow);
-            System.out.println(line);
-        }
-
-    }
-
     /** Return a matrix of the given size populated with 0s placed at random vertices. */
     private static int[][] populateMatrix(final int size) {
         int[][] result = new int[size][size];
@@ -156,34 +120,15 @@ public class Main {
                 result[i][j] = 1;
 
         // Generate at least one and less than size 0's placed at random vertices.
-        int numberOfZeros = getRandomInRange(1, size - 1);
+        int numberOfZeros = Util.getRandomInRange(1, size - 1);
         int[] vertices = new int[numberOfZeros];
         for (int i = 0; i < vertices.length; i++) {
-            int position = getRandomInRange(1, (size * size) - 1);
+            int position = Util.getRandomInRange(1, (size * size) - 1);
             int row = position / size;
             int col = position % size;
             result[row][col] = 0;
         }
         return result;
-    }
-
-    /**
-     * Do nothing if the given value is not a positive non-zero value, otherwise zero out the rows
-     * and columns for each element containing a zero value.
-     */
-    private static void zeroMatrix(final String value) {
-        // Run BFS to determine the result.
-        final int N = getSize(value);
-        if (N < 0)
-            return;
-
-        // Populate the NxN matrix with randomly generated and placed 0's.  Keep a copy of the
-        // original input order to print both for a side by side comparison.
-        int[][] input = populateMatrix(N);
-        int[][] result = copyOf(input);
-        zeroMatrix(result);
-        System.out.println(String.format("Matrix of size %s.", value));
-        printMatrices(input, result);
     }
 
     /** Perform the zeroing, in-place, on the given matrix. */
