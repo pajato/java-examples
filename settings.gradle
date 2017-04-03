@@ -1,6 +1,7 @@
 include ':convert'
 include ':ctci1.4'
 include ':ctci1.7'
+include ':ctci2.5'
 include ':ctci4.1'
 include ':ctci4.2'
 include ':ctci5.4'
