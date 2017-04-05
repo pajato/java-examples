@@ -22,6 +22,44 @@ public class Util {
         return result;
     }
 
+    /** Return an array with the unique values present in the given sorted int array. */
+    public static int[] getUnique(int[] a) {
+        if (a == null || a.length == 0)
+            return null;
+        final int N = a.length;
+        final int[] b = Arrays.copyOf(a, N);
+        Arrays.sort(b);
+        final int M = getUniqueCount(a);
+        int[] result = new int[M];
+        result[0] = b[0];
+        int current = b[0];
+        for (int i = 1, j = 1; i < N; i++) {
+            if (current != b[i]) {
+                result[j++] = b[i];
+                current = b[i];
+            }
+        }
+        return result;
+    }
+
+    /** Return the number of unique values in an int array. */
+    public static int getUniqueCount(int[] a) {
+        if (a == null || a.length == 0)
+            return 0;
+        int result = 1;
+        final int N = a.length;
+        int[] b = Arrays.copyOf(a, N);
+        Arrays.sort(b);
+        int current = b[0];
+        for (int i = 0; i < N; i++) {
+            if (current != b[i]) {
+                result++;
+                current = b[i];
+            }
+        }
+        return result;
+    }
+
     /** Return a random value in the given (inclusive) range. */
     public static int getRandomInRange(int min, int max) {
         int range = (max - min) + 1;
@@ -50,7 +88,6 @@ public class Util {
             String line = String.format(Locale.US, "%s    %s", inputRow, outputRow);
             System.out.println(line);
         }
-
     }
 
     /** Return the given row expressed as a string. */
