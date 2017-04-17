@@ -12,12 +12,33 @@ buildscript {
 
 allprojects {
     apply plugin: 'application'
+    apply plugin: 'jacoco'
     apply plugin: 'maven-publish'
     mainClassName = 'Main'
+
     run {
         if ( project.hasProperty('args') ) {
             args project.args.split('\\s+')
         }
+        standardInput = System.in
+    }
+
+    jacoco {
+        toolVersion = "0.7.6.201602180812"
+        applyTo run
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled false
+            csv.enabled false
+            html.destination "${buildDir}/reports/jacoco/testCodeCoverageReport"
+        }
+    }
+
+    task applicationCodeCoverageReport(type:JacocoReport){
+        executionData run
+        sourceSets sourceSets.main
     }
 
     // Configure the utility library to be deployed into the local
@@ -47,22 +68,7 @@ allprojects {
 
     dependencies {
         compile 'com.pajato.java:util:1.0'
-    }
-
-    // Configure the project build directories to be relative to a
-    // base build directory if one is defined in, for example, a
-    // Gradle properties file.  This provides the ability to store the
-    // source code on a synced store, such as Google Drive, without
-    // incurring the stress, strain and inherent problem in trying to
-    // sync build files.  The build files would likely live isolated
-    // to each local development system.
-    //
-    // TODO: A better solution, possibly optimal, would be to provide
-    // a Gradle plugin to handle a more complete implementation
-    // mirroring the app structure.
-    if (rootProject.hasProperty('baseBuildDir') && baseBuildDir != null) {
-        buildDir = baseBuildDir + (parent == null ? "/${project.name}/build"
-                : "/${rootProject.name}/${project.name}/build")
+        testCompile 'junit:junit:4.12'
     }
 }
 
