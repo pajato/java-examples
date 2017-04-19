@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import util.Util;
 
 public class Main {
@@ -69,16 +70,16 @@ public class Main {
         if (args.length != 2)
             abort("Input must be two strings; a set of integers delimited by '->' and an int value");
         StringTokenizer tokenizer = new StringTokenizer(args[0], DELIM);
-        int value = getValue(args[1]);
+        int value = Util.getInt(args[1]);
         int size = tokenizer.countTokens();
         Node in = getNode(tokenizer);
-        System.out.println("Input: " + in);
+        System.out.println("Input: " + in + ", partition value: " + value);
         Node out = partition(in, value);
         System.out.println("Output: " + out);
     }
 
     /** Abort for the given reason. */
-    private void abort(final String reason) {
+    private static void abort(final String reason) {
         System.out.println(reason);
         System.exit(1);
     }
@@ -88,52 +89,28 @@ public class Main {
         int size = tokenizer.countTokens();
         if (size <=0)
             abort("Input linked list is invalid or empty, aborting.");
-        Node result;
-        Node n;
-        for (int i = 0; i < size; i++) {
-            if (i == 0) {
-                result = new Node();
-                n = result;
-            } else {
-                n.next = new Node();
-                n = n.next;
-            }
-            n.data = getValue(tokenizer.nextToken());
+        Node result = new Node(Util.getInt(tokenizer.nextToken()));
+        Node n = result;
+        for (int i = 1; i < size; i++) {
+            n.next = new Node(Util.getInt(tokenizer.nextToken()));
+            n = n.next;
         }
+        return result;
     }
 
     /** Build a list of nodes satisfying the problem constraint. */
     private static Node partition(Node in, final int x) {
-        Node first;
-        Node last;
-        while (in != null) {
-            if (in.data <= x) {
-                first = updatePrev(first, in);
-                if (last == null)
-                    last = first;
-            } else {
-                last = updateNext(last, in);
-                if (first == null)
-                    first = last;
-            }
+        Node first = new Node(in.data);
+        Node last = first;
+        while (in.next != null) {
             in = in.next;
+            if (in.data < x) {
+                Node tmp = new Node(in.data);
+                tmp.next = first;
+                first = tmp;
+            } else
+                last = last.next = new Node(in.data);
         }
         return first;
-    }
-
-    private Node updatePrev(Node n, Node in) {
-        if (n != null) {
-            n.prev = new Node(in.data);
-            return n.prev;
-        } else
-            return new Node(in.data);
-    }
-
-    private Node updateNext(Node n, Node in) {
-        if (n != null) {
-            n.next = new Node(in.data);
-            return n.next;
-        } else
-            return new Node(in.data);
     }
 }
