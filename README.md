@@ -38,8 +38,61 @@ build.gradle:
     }
 
     allprojects {
+        // Declare plugins
         apply plugin: 'application'
+        apply plugin: 'jacoco'
+        apply plugin: 'maven-publish'
+
+        // All apps use a Main class:
         mainClassName = 'Main'
+
+        // Set up the application plugin run closure:
+        run {
+            if ( project.hasProperty('args') ) {
+                args project.args.split('\\s+')
+            }
+            standardInput = System.in
+        }
+
+        // Set up the application code coverage closure and task:
+        jacoco {
+            toolVersion = "0.7.6.201602180812"
+            applyTo run
+        }
+        task applicationCodeCoverageReport(type:JacocoReport) {
+            executionData run
+            sourceSets sourceSets.main
+        }
+
+        // Set the test code coverage closure:
+        jacocoTestReport {
+            reports {
+                xml.enabled false
+                csv.enabled false
+                html.destination "${buildDir}/reports/jacoco/testCodeCoverageReport"
+            }
+        }
+
+        // Configure the utility library to be deployed into the local
+        // maven repository:
+        group = 'com.pajato.java'
+        version = '1.0'
+        publishing {
+            publications {
+                mavenJava(MavenPublication) {
+                    from components.java
+                }
+            }
+        }
+        publishing {
+            repositories {
+                maven {
+                    // change to point to your repo, e.g. http://my.org/repo
+                    url "$buildDir/repo"
+                }
+            }
+        }
+
         repositories {
             jcenter()
             mavenLocal()
@@ -52,12 +105,16 @@ build.gradle:
 
 settings.gradle contains the sub-projects:
 
-    include ':ex1', ':ex2', ...
+    include ':apps:hello-world'
+    include ':apps:...'
+    ...
+    include ':lib:util'
 
 With this structure in place a new example (project) can be added very simply.  For example, _ex1_ would add the following to the *java-examples* folder:
 
     ~/java-examples/
-      ex1/src/main/java/Main.java
+    apps:ex1/src/main/java/Main.java
+    apps:ex1/src/test/java/MainTest.java
 
 Main.java:
 
@@ -71,20 +128,20 @@ Main.java:
 And now, to build and run using the Emacs M-x compile facility:
 
     M-x compile
-    cd ~/java-examples && gradlew :ex1:run
+    cd ~/java-examples && gradlew :apps:ex1:run
 
 which will generate the output:
 
     -*- mode: compilation; default-directory: "~/java-examples/" -*-
     Compilation started at Sat Mar 25 04:03:35
 
-    cd ~/java-examples && gradle ex1:run
+    cd ~/java-examples && gradle apps:ex1:run
     Starting a new Gradle Daemon for this build (subsequent builds will be faster).
     Parallel execution with configuration on demand is an incubating feature.
-    :ex1:compileJava UP-TO-DATE
-    :ex1:processResources UP-TO-DATE
-    :ex1:classes UP-TO-DATE
-    :ex1:run
+    :apps:ex1:compileJava UP-TO-DATE
+    :apps:ex1:processResources UP-TO-DATE
+    :apps:ex1:classes UP-TO-DATE
+    :apps:ex1:run
     Hello World
 
     BUILD SUCCESSFUL
