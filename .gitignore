@@ -13,6 +13,7 @@ hs_err_pid*
 
 # Gradle files.
 .gradle
+build/
 
 # Android Studio meta files
 .idea
