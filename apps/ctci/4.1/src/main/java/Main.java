@@ -16,7 +16,7 @@
  *
  * Result: (output)
  *
- *    p does have a path to q.result: 1, 2, 4, 7, 9, 22, 23, 44, 56, 88, 99, 456, 1200, 5589
+ *    p does have a path to q.
  *
  * Analysis:
  *
@@ -38,117 +38,39 @@ import java.util.HashMap;
 
 public class Main {
 
-    static class Graph {
-        Node[] nodes;
-
-        Graph(Node[] nodes) {
-            this.nodes = nodes;
-        }
-
-        boolean hasNode(Node n) {
-            if (nodes != null)
-                for (Node node : nodes)
-                    if (node.name.equals(n.name))
-                        return true;
-            return false;
-        }
-    }
-
-    static class Node {
-        String name;
-        Node[] children;
-
-        Node(String name) {
-            this.name = name;
-        }
-
-        boolean hasNode(Node node) {
-            if (children != null)
-                for (Node n : children)
-                    if (n.name.equals(node.name))
-                        return true;
-            return false;
-        }
-    }
-
-    private static final Map<String, Node> nodeMap = new HashMap<>();
-
     /** Run the program ignoring the command line arguments. */
     public static void main(String[] args) throws Exception {
-        // Define the graph and the nodes.
-        Node[] nodes = getNodes();
-        Graph g = new Graph(nodes);
-        Node p = nodeMap.get("p");
-        Node q = nodeMap.get("q");
-        boolean result = hasPath(g, p, q);
-        String format = "%s %s have a path to %s";
-        String message = result ? "does" : "does not";
-        System.out.println(String.format(Locale.US, format, p.name, message, q.name));
+        // nop.
     }
 
     /** Return TRUE iff there is a path between the given nodes. */
     public static boolean hasPath(Graph g, Node n1, Node n2) {
-        // Run BFS to determine the result.
+        // Ensure that the two input nodes exist in the given graph. Fail fast if either does not.
         if (!g.hasNode(n1) || !g.hasNode(n2))
             return false;
+
+        // Walk the levels in the graph (BFS) terminating when all the nodes in g have been visited.
         List<Node> queue = new ArrayList<>();
         queue.add(n1);
         List<Node> visited = new ArrayList<>();
         int qIndex = 0;
-        while (visited.size() < g.nodes.length) {
-            // Work on node n by determining if it has been visited already, in which case it is
-            // skipped.  Otherwise it is marked.
+        while (visited.size() < g.nodes.length && qIndex < queue.size()) {
+            // Process the next node in the queue but skip already visited nodes. Mark this node as
+            // visited.
             Node n = queue.get(qIndex++);
             if (visited.contains(n))
                 continue;
             visited.add(n);
 
-            // Add the children of the node being visited to the queue for subsequent processing and
-            // determine if this node is the target.
+            // Add the children of this node to the queue for subsequent processing and
+            // determine if this node is the target. If so, return true and be done.
             if (n.children != null)
                 for (Node node : n.children)
                     queue.add(node);
             System.out.println("Visiting node: " + n.name);
-            if (n.hasNode(n2)) {
-                // There is a path.  Print it.
-                printPath(n1, n2, n);
+            if (n.hasNode(n2))
                 return true;
-            }
         }
         return false;
-    }
-
-    private static void printPath(Node dest, Node parent, Node start) {
-        System.out.print("The path is: " + dest.name);
-
-    }
-    private static Node[] getNodes() {
-        createNodes("a", "b", "c", "d", "q", "x", "y", "z", "p", "o", "r");
-        addChildren("a", "b", "c", "p");
-        addChildren("b", "d");
-        addChildren("d", "q");
-        addChildren("c", "x", "y", "z");
-        addChildren("p", "a", "o");
-        addChildren("o", "p", "r");
-        int index = 0;
-        Node[] result = new Node[nodeMap.values().size()];
-        for (Node node : nodeMap.values())
-            result[index++] = node;
-        return result;
-    }
-
-    private static void createNodes(String... nodes) {
-        for (String name : nodes) {
-            Node node = new Node(name);
-            nodeMap.put(name, node);
-        }
-    }
-
-    private static void addChildren(String name, String... names) {
-        Node node = nodeMap.get(name);
-        Node[] children = new Node[names.length];
-        for (int i = 0; i < names.length; i++)
-            children[i] = nodeMap.get(names[i]);
-        node.children = children;
     }
 }

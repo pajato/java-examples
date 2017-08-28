@@ -78,6 +78,11 @@ allprojects {
         compile 'com.pajato.java:util:1.0'
         testCompile 'junit:junit:4.12'
     }
+
+    task execute(type:JavaExec) {
+        main = "Main"
+        classpath = sourceSets.main.runtimeClasspath
+    }
 }
 
 // Define versions in a single place
