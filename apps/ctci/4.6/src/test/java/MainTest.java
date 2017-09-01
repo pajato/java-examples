@@ -26,6 +26,12 @@ public class MainTest {
 
     private Map<String, Node> nodeMap = new HashMap<>();
 
+    /** Boiler-plate test for code-coverage only. */
+    @Test public void testMain() {
+        Main main = new Main();
+    }
+
+    /** Main tests for the next() method. */
     @Test public void testAll() {
         runTest(1, null, null, null);
 

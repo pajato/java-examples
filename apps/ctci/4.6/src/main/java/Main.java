@@ -1,3 +1,5 @@
+
+
 /**
  * Problem 4.4 CTCI Check Balanced
  *
@@ -17,11 +19,6 @@
  */
 public class Main {
 
-    /** Run the program ignoring the command line arguments. */
-    public static void main(String[] args) throws Exception {
-        // nop.
-    }
-
     /** Return TRUE iff the heights of the two sub-trees of the given node differ by less than 2. */
     static Node next(Node root, Node node) {
         if (root == null)
@@ -40,8 +37,6 @@ public class Main {
     }
 
     private static Node traverseLeft(Node node) {
-        if (node == null)
-            return null;
         if (node.left == null)
             return node;
         return traverseLeft(node.left);
@@ -49,8 +44,6 @@ public class Main {
     }
 
     private static Node traverseRight(Node node) {
-        if (node == null)
-            return null;
         if (node.left != null)
             return traverseLeft(node.left);
         return node;
