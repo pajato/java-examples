@@ -1,6 +1,4 @@
-import java.io.*;
-
-import java.util.*;
+import java.util.Locale;
 
 /**
  * Implement a regular expression function isMatch that supports the '.' and '*' symbols. The
@@ -39,7 +37,7 @@ class Main {
             if (currentPattern.startsWith(".*"))
                 // Accept the input text.
                 return true;
-            else if (currentPattern.startWith".")
+            else if (currentPattern.startsWith("."))
                 // Accept this character.
                 textIndex++;
             else if (currentPattern.length() > 1 && currentPattern.charAt(1) == '*') {
@@ -51,8 +49,10 @@ class Main {
                 else {
                     int pIndex = 0;
                     int tIndex = 0;
-                    while (currentPattern.charAt())
-            } else
+                    while (currentPattern.charAt(pIndex) == 'a') {
+                        // tbd.
+                    }
+                }
                 // Match the current character
                 if (currentText.charAt(0) != currentPattern.charAt(0))
                     return false;
