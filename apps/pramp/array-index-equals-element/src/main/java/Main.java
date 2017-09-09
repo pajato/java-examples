@@ -1,6 +1,3 @@
-import java.io.*;
-import java.util.*;
-
 /**
  * Pramp: Array Index & Element Equality
  *
