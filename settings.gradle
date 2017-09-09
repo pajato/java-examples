@@ -1,3 +1,4 @@
+include ':apps:pramp:h-tree-construction'
 include ':apps:hello-world'
 include ':apps:ctci:1.4-palindrome-permutations'
 include ':apps:ctci:1.7-rotate-matrix'
