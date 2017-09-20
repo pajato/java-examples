@@ -1,8 +1,8 @@
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.math.*;
-import java.util.regex.*;
+import java.util.Scanner;
+
+/**
+ * This example is incomplete and disabled via removal from settings.gradle.
+ */
 public class Main {
     public static int numberNeeded(String first, String second) {
         // Build two arrays to hold the character counts of each possible character (a-z) in the
@@ -28,7 +28,8 @@ public class Main {
         char[] chars = s.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             int index = chars[i] - 'a';
-            result[index]++;
+            if (index >= 0)
+                result[index]++;
         }
         return result;
     }
