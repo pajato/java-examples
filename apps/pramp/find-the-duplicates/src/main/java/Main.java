@@ -26,7 +26,7 @@ class Main {
 
     // Public class methods.
 
-    /** Return the given array sorted by using the pancake sort described above. */
+    /** Return the ... */
     static int[] findDuplicates(int[] arr1, int[] arr2) {
         // your code goes here
 
@@ -34,10 +34,19 @@ class Main {
         if (arr1 == null || arr2 == null)
             return new int[]{};
 
-        // Handle normal cases for arr1.length ~= arr2.length
+        // Handle normal cases.
+        // Compute the larger of the two arrays.
+        int[] larger = arr1.length > arr2.length ? arr1 : arr2;
+        int[] smaller = larger == arr1 ? arr2 : arr1;
+
+        // The time complexity is O(S * log(L)) where L is the length of the larger input and S is
+        // the length of the smaller.  For example, with L == 64 and S == 4 we get 4 * 8 == 32
+        // (versus the alternative of 64 * 2 == 128!).  Note a further optimization is to bracket
+        // teh binary search over the range within the larger array that covers the smaller array,
+        // if such a bracketing exists.  This optimization is not pursued here.
         List<Integer> result = new ArrayList<>();
-        for (int value : arr1)
-            if (Arrays.binarySearch(arr2, value) >= 0)
+        for (int value : smaller)
+            if (Arrays.binarySearch(larger, value) >= 0)
                 result.add(value);
         int[] resultArr = new int[result.size()];
         for (int i = 0; i < result.size(); i++)
