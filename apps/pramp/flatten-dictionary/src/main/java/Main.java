@@ -11,12 +11,8 @@ class Main {
         return output;
     }
 
-    public static void main(String[] args) {
-
-    }
-
     /** Recursively add the elements of the given dict to the given output. */
-    static void flatten(HashMap<String, String> output, String key, Map<String, Object> dict) {
+    private static void flatten(HashMap<String, String> out, String key, Map<String, Object> dict) {
         // Ensure that an empty dictionary makes no contribution to the output.
         if (dict == null)
             return;
@@ -29,9 +25,9 @@ class Main {
             System.out.println(key + ":" + k + ":" + item.getClass().getSimpleName() + ":" + item);
             String outputKey = key == null || key.isEmpty() ? k : k.isEmpty() ? key : key + "." + k;
             if (item instanceof String)
-                output.put(outputKey, (String) item);
+                out.put(outputKey, (String) item);
             else if (item instanceof Map)
-                flatten(output, outputKey, (Map) item);
+                flatten(out, outputKey, (Map) item);
         }
     }
 }

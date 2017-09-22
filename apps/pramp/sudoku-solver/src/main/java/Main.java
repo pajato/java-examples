@@ -68,6 +68,27 @@ class Main {
         if (board == null || isInvalid(board))
             return false;
 
+        // Handle the normal case, a partially populated board, by using recursive backtracking on
+        // the set of possible solutions until they are fully exhausted or until the valid solution
+        // is found, for which there is only one. First build the set of possible solution
+        // candidates and return a root node into the solutions tree.
+        Node root = getCandidates(board);
+        return hasSolution(root, board);
+    }
+
+    /** Return TRUE iff the given board and solution tree has a solution. */
+    private static boolean hasSolution(char[][] board, Node node) {
+        // Handle the base case.
+        if (node == null
+            if (isValidSolution(board))
+                return true;
+
+        // Handle the case
+
+
+    }
+    /** Return TRUE iff the given board represents a valid solution. */
+    private static boolean isValidSolution(final char[][] board) {
         // Algorithm:
         //
         // 1) Ensure that the rows do not have any dups.
