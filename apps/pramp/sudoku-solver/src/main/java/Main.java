@@ -1,5 +1,5 @@
-import java.util.Map;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Pramp practice interview question.
@@ -53,100 +53,79 @@ import java.util.HashMap;
  */
 class Main {
 
-    private static final Map<Character, Boolean> map = new HashMap<>();
-
     /** A blank character. */
     private static final char BLANK = '.';
 
     // Public class methods.
 
-    // Return true iff there are no dups in the rows, columns or sub-arrays of the given matrix. */
+    /** Return true iff there is a valid solution to the given board. */
     static boolean sudokuSolve(char[][] board) {
         // your code goes here
 
         // Handle special cases.
-        if (board == null || isInvalid(board))
+        if (board == null || board.length != 9)
             return false;
 
-        // Handle the normal case, a partially populated board, by using recursive backtracking on
-        // the set of possible solutions until they are fully exhausted or until the valid solution
-        // is found, for which there is only one. First build the set of possible solution
-        // candidates and return a root node into the solutions tree.
-        Node root = getCandidates(board);
-        return hasSolution(root, board);
-    }
-
-    /** Return TRUE iff the given board and solution tree has a solution. */
-    private static boolean hasSolution(char[][] board, Node node) {
-        // Handle the base case.
-        if (node == null
-            if (isValidSolution(board))
-                return true;
-
-        // Handle the case
-
-
-    }
-    /** Return TRUE iff the given board represents a valid solution. */
-    private static boolean isValidSolution(final char[][] board) {
-        // Algorithm:
-        //
-        // 1) Ensure that the rows do not have any dups.
-        // Assume that the board is square and of length 9.
-        final int length = 9;
-        for (int r = 0; r < length; r++) {
-            // Assume a square board!
-            map.clear();
-            for (int c = 0; c < length; c++) {
-                // Check for a row violation.
-                char ch = board[r][c];
-                if (ch != BLANK && map.containsKey(ch))
-                    return false;
-                map.put(ch, true);
+        // Determine the position (r,c) which has the least number of candidate characters.
+        int row = -1;
+        int col = -1;
+        char[] candidates = null;
+        final int n = board.length;
+        for (int r = 0; r < n; r++)
+            for (int c = 0; c < n; c++) {
+                if (board[r][c] == BLANK) {
+                    char[] possibleCandidates = getCandidates(board, r, c);
+                    if (candidates == null || possibleCandidates.length < candidates.length) {
+                        candidates = possibleCandidates;
+                        row = r;
+                        col = c;
+                    }
+                }
             }
-        }
 
-        // 2) Ensure that the columns do not have any dups.
-        for (int c = 0; c < length; c++) {
-            map.clear();
-            for (int r = 0; r < length; r++) {
-                char ch = board[r][c];
-                if (ch != BLANK && map.containsKey(ch))
-                    return false;
-                map.put(ch, true);
-            }
-        }
-
-        // 3) Ensure that the sub-arrays do have any dups.  There are nine of them.
-        for (int i = 0; i < length; i++) {
-            map.clear();
-            if (invalidSubArray(board, i / 3, 3 * (i % 3)))
-                return false;
-        }
-
-        return true;
-    }
-
-    /** Return TRUE iff the sub-array at the given cell has a duplicate value. */
-    private static boolean invalidSubArray(final char[][] board, final int row, final int col) {
-        map.clear();
-        for (int r = row; r < row + 3; r++) {
-            for (int c = col; c < col + 3; c++) {
-                char ch = board[r][c];
-                if (ch != BLANK && map.containsKey(ch))
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    /** Return true iff the board is not a valid Sudoku board. */
-    private static boolean isInvalid(final char[][] board) {
-        if (board == null || board.length != 9)
+        // Test for the availability of a candidate.  If there are none, the puzzle has been solved.
+        if (candidates == null)
             return true;
-        for (char[] row : board)
-            if (row.length != 9)
+
+        // Apply a character from the candidate and solve for that board.
+        for (char c : candidates) {
+            board[row][col] = c;
+            if (sudokuSolve(board))
                 return true;
+            board[row][col] = BLANK;
+        }
+
         return false;
+    }
+
+    /** Return the set of candidate characters for the given board position (row, col). */
+    private static char[] getCandidates(final char[][] board, final int row, final int col) {
+        // Build a map of characters in the row, col and sub-array.
+        final int n = board.length;
+        Set<Character> set = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            char c = board[row][i];
+            if (c != BLANK)
+                set.add(c);
+        }
+        for (int i = 0; i < n; i++) {
+            char c = board[i][col];
+            if (c != BLANK)
+                set.add(c);
+        }
+        for (int i = row - row % 3; i < 3; i++)
+            for (int j = col - col % 3; j < 3; j++) {
+                char c = board[i][j];
+                if (c != BLANK)
+                    set.add(c);
+            }
+
+        // Return the set of characters between '0'..'8' (inclusive) that are actual candidates.
+        char[] result = new char[9 - set.size()];
+        int index = 0;
+        for (char c : new char[]{'1', '2', '3', '4', '5', '6', '7', '8', '9'})
+            if (!set.contains(c))
+                result[index++] = c;
+        return result;
     }
 }
